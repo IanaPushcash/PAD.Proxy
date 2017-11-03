@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace InformationNode
 {
-	class LinkedNode:Client
+	class LinkedNode:Node
 	{
+		public LinkedNode(string filePath, int port) : base(filePath, port)
+		{
+		}
 	}
 }
