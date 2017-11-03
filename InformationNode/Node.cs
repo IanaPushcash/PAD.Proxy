@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -15,12 +16,12 @@ namespace InformationNode
 		public string FilePath { get; set; }
 		public int Port { get; set; }
 		public int CountLinks { get; set; }
-		public List<LinkedNode> LinkedNodes { get; set; }
+		public ConcurrentQueue<LinkedNode> LinkedNodes { get; set; }
 		public Node(string filePath, int port)
 		{
 			FilePath = filePath;
 			Port = port;
-			LinkedNodes = new List<LinkedNode>();
+			LinkedNodes = new ConcurrentQueue<LinkedNode>();
 		}
 
 		public void Start()
@@ -34,12 +35,12 @@ namespace InformationNode
 				while (true)
 				{
 					TcpClient client = listener.AcceptTcpClient();
-					LinkedNode lNode = new LinkedNode(client);
+					Client clientObj = new Client(client,this);
 
 					// создаем новый поток для обслуживания нового клиента
-					Thread clientThread = new Thread(new ThreadStart(lNode.Process));
+					Thread clientThread = new Thread(new ThreadStart(clientObj.Process));
 					clientThread.Start();
-					Thread.Sleep(100);
+					//Thread.Sleep(100);
 				}
 			}
 			catch (Exception ex)
@@ -48,8 +49,7 @@ namespace InformationNode
 			}
 			finally
 			{
-				if (listener != null)
-					listener.Stop();
+				listener?.Stop();
 			}
 		}
 	}
