@@ -41,6 +41,8 @@ namespace InformationNode
 
 				Message msg = Message.Create(builder.ToString(), this);
 				string response = msg.GetResponse();
+				data = Encoding.Unicode.GetBytes(response);
+				stream.Write(data, 0, data.Length);
 				//ClientName = msg.Name;
 				//if (!msg.IsSender && !Broker.Subscribers.Contains(this))
 				//{
@@ -62,8 +64,7 @@ namespace InformationNode
 				//else Broker.GetInstance().GetAnswerMsg(msg, stream);
 				// отправляем обратно сообщение в верхнем регистре
 				//message = message.Substring(message.IndexOf(':') + 1).Trim().ToUpper();
-				//data = Encoding.Unicode.GetBytes(message);
-				//stream.Write(data, 0, data.Length);
+
 			}
 			catch (Exception ex)
 			{

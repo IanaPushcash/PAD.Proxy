@@ -14,7 +14,7 @@ namespace InformationNode.Messages
 		public override string GetResponse()
 		{
 			LinkedNode lNode = JsonConvert.DeserializeObject<LinkedNode>(Author);
-			CurrentClient.InitNode.LinkedNodes.Enqueue(lNode);
+			CurrentClient.InitNode.LinkedNodes.Add(lNode);
 			return new ResponseMsg(JsonConvert.SerializeObject(CurrentClient.InitNode), "success").GetResponse();
 		}
 
