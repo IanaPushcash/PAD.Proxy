@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace InformationNode
 {
@@ -11,7 +13,31 @@ namespace InformationNode
 		static void Main(string[] args)
 		{
 			Console.WriteLine("Enter file path:");
-
+			var filePath = Console.ReadLine();
+			//List<Person> l = new List<Person>();
+			//l.Add(new Person("Iana", 20, "Moldova"));
+			//l.Add(new Person("Anna", 29, "Russia"));
+			//l.Add(new Person("Victor", 12, "Germania"));
+			//l.Add(new Person("Artur", 18, "Suedia"));
+			//l.Add(new Person("Cristi", 15, "Moldova"));
+			//l.Add(new Person("Dumitru", 22, "Romania"));
+			//File.WriteAllText(filePath, JsonConvert.SerializeObject(l));
+			Console.WriteLine("Enter Port:");
+			var port = Convert.ToInt32(Console.ReadLine());
+			Console.WriteLine("Count of linked nodes:");
+			var countPorts = Convert.ToInt32(Console.ReadLine());
+			var node = new Node(filePath, port);
+			for (int i = 0; i < countPorts; i++)
+			{
+				Console.WriteLine("Enter port for {0} node", i+1);
+				node.LinkedNodes.Add(new LinkedNode(Convert.ToInt32(Console.ReadLine())));
+			}
+			
+			node.Start();
+			while (true)
+			{
+				Console.ReadLine();
+			}
 		}
 	}
 }

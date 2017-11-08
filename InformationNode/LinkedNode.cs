@@ -11,5 +11,10 @@ namespace InformationNode
 		public LinkedNode(string filePath, int port) : base(filePath, port)
 		{
 		}
+
+		public LinkedNode(int port):base()
+		{
+			Port = port;
+		}
 	}
 }

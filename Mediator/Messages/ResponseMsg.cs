@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-
-namespace InformationNode.Messages
+﻿namespace Mediator.Messages
 {
 	class ResponseMsg:Message
 	{
@@ -18,7 +11,6 @@ namespace InformationNode.Messages
 		{
 			Author = author;
 			Body = body;
-			Type = "Response";
 		}
 	}
 }

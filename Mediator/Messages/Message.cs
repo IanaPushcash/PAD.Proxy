@@ -1,7 +1,6 @@
-﻿using System.Net.Sockets;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace InformationNode.Messages
+namespace Mediator.Messages
 {
 	abstract class Message
 	{
@@ -15,8 +14,8 @@ namespace InformationNode.Messages
 			switch (msgObj.Type)
 			{
 				case "Connect": return new ConnectMsg(msgObj, client);
-				case "GetInfo": return new GetInfoMsg(msgObj, client);
-				case "GetNodes":return new GetNodesMsg(msgObj, client);
+				case "GetInfo": return new GetInfoMsg(msgObj);
+				case "GetNodes":return new GetNodesMsg(msgObj);
 				default:
 					return new ErrorMsg();
 			}

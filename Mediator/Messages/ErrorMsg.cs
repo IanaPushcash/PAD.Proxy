@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace InformationNode.Messages
+namespace Mediator.Messages
 {
 	class ErrorMsg:Message
 	{
@@ -13,7 +9,7 @@ namespace InformationNode.Messages
 			throw new NotImplementedException();
 		}
 
-		public ErrorMsg(Message msg) 
+		public ErrorMsg(Message msg) : base(msg)
 		{
 		}
 

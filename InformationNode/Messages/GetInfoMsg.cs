@@ -16,59 +16,56 @@ namespace InformationNode.Messages
 		public override string GetResponse()
 		{
 			var nodeData = CurrentClient.InitNode.GetData();
-			lock (CurrentClient.InitNode.LinkedNodes)
+			CountdownEvent cde = new CountdownEvent(CurrentClient.InitNode.LinkedNodes.Count);
+			foreach (var ln in CurrentClient.InitNode.LinkedNodes)
 			{
-				CountdownEvent cde = new CountdownEvent(CurrentClient.InitNode.LinkedNodes.Count);
-				foreach (var ln in CurrentClient.InitNode.LinkedNodes)
+				try
 				{
-					try
+					Task.Run(() =>
 					{
-						Task.Run(() =>
+						TcpClient client = new TcpClient(ln.Address, ln.Port);
+						var stream = client.GetStream();
+						byte[] data = Encoding.Unicode.GetBytes(JsonConvert.SerializeObject(this));
+						// отправка сообщения
+						stream.Write(data, 0, data.Length);
+						Thread thread = new Thread(() =>
 						{
-							TcpClient client = new TcpClient(ln.Address, ln.Port);
-							var stream = client.GetStream();
-							byte[] data = Encoding.Unicode.GetBytes(JsonConvert.SerializeObject(this));
-							// отправка сообщения
-							stream.Write(data, 0, data.Length);
-							Thread thread = new Thread(() =>
+							while (true)
 							{
-								while (true)
+								if (stream.DataAvailable)
 								{
-									if (stream.DataAvailable)
+									// получаем ответ
+									data = new byte[1000000]; // буфер для получаемых данных
+									StringBuilder builder = new StringBuilder();
+									int bytes = 0;
+									do
 									{
-										// получаем ответ
-										data = new byte[1000000]; // буфер для получаемых данных
-										StringBuilder builder = new StringBuilder();
-										int bytes = 0;
-										do
-										{
-											bytes = stream.Read(data, 0, data.Length);
-											builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
-										} while (stream.DataAvailable);
-										lock (nodeData)
-										{
-											nodeData.AddRange(JsonConvert.DeserializeObject<List<Person>>(builder.ToString()));
-										}
-										break;
-									}
+										bytes = stream.Read(data, 0, data.Length);
+										builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
+									} while (stream.DataAvailable);
+									nodeData.AddRange(JsonConvert.DeserializeObject<List<Person>>(builder.ToString()));
+									stream?.Close();
+									client?.Close();
+									break;
 								}
-							});
-							thread.Start();
-							Thread.Sleep(30000);
-							thread.Abort();
-							cde.Signal();
+							}
 						});
-
-					}
-					catch (Exception ex)
-					{
-						Console.WriteLine(ex.Message);
+						thread.Start();
+						Thread.Sleep(30000);
+						thread.Abort();
 						cde.Signal();
-					}
-					cde.Wait();
+					});
+
 				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+					cde.Signal();
+				}
+				cde.Wait();
 			}
-			return new ResponseMsg(JsonConvert.SerializeObject(CurrentClient.InitNode), 
+
+			return new ResponseMsg(JsonConvert.SerializeObject(CurrentClient.InitNode),
 				JsonConvert.SerializeObject(nodeData)).GetResponse();
 		}
 
