@@ -51,8 +51,10 @@ namespace InformationNode.Messages
 							}
 						});
 						thread.Start();
-						Thread.Sleep(30000);
+						Thread.Sleep(3000);
 						thread.Abort();
+						stream?.Close();
+						client?.Close();
 						cde.Signal();
 					});
 
@@ -62,9 +64,9 @@ namespace InformationNode.Messages
 					Console.WriteLine(ex.Message);
 					cde.Signal();
 				}
-				cde.Wait();
+				
 			}
-
+			cde.Wait();
 			return new ResponseMsg(JsonConvert.SerializeObject(CurrentClient.InitNode),
 				JsonConvert.SerializeObject(nodeData)).GetResponse();
 		}

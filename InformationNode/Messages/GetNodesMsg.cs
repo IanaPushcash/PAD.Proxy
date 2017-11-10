@@ -15,10 +15,17 @@ namespace InformationNode.Messages
 
 		public override string GetResponse()
 		{
-			CountdownEvent cde = new CountdownEvent(CurrentClient.InitNode.LinkedNodes.Count);
-			for ( int i = 0; i < CurrentClient.InitNode.LinkedNodes.Count; i++)
+			CurrentClient.InitNode.LinkedNodes = GetValue(CurrentClient.InitNode.LinkedNodes);
+			CurrentClient.InitNode.MyNodes = GetValue(CurrentClient.InitNode.MyNodes);
+			return new ResponseMsg(JsonConvert.SerializeObject(CurrentClient.InitNode), "").GetResponse();
+		}
+
+		private List<LinkedNode> GetValue(List<LinkedNode> nodes)
+		{
+			CountdownEvent cde = new CountdownEvent(nodes.Count);
+			for (int i = 0; i < nodes.Count; i++)
 			{
-				var ln = CurrentClient.InitNode.LinkedNodes[i];
+				var ln = nodes[i];
 				try
 				{
 					Task.Run(() =>
@@ -26,7 +33,7 @@ namespace InformationNode.Messages
 						TcpClient client = new TcpClient(ln.Address, ln.Port);
 						if (!client.Connected)
 						{
-							CurrentClient.InitNode.LinkedNodes.Remove(ln);
+							nodes.Remove(ln);
 							i--;
 						}
 						cde.Signal();
@@ -39,7 +46,7 @@ namespace InformationNode.Messages
 				}
 			}
 			cde.Wait();
-			return new ResponseMsg(JsonConvert.SerializeObject(CurrentClient.InitNode), "").GetResponse();
+			return nodes;
 		}
 
 		public GetNodesMsg(Message msg, Client client) : base(msg, client)

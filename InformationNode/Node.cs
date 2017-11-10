@@ -20,13 +20,15 @@ namespace InformationNode
 		public int Port { get; set; }
 		//public int CountLinks { get; set; }
 		public string Address { get; set; } = "127.0.0.1";
-		public List<LinkedNode> LinkedNodes { get; set; }
+		public List<LinkedNode> LinkedNodes { get; set; } //ко мне подключаются
+		public List<LinkedNode> MyNodes { get; set; } //я подключаюсь к
 		private Socket udpSocket { get; set; }
 		public Node() { }
-		public Node(string filePath, int port)
+		public Node(string filePath, int port, string ip)
 		{
 			FilePath = filePath;
 			Port = port;
+			Address = ip;
 			LinkedNodes = new List<LinkedNode>();
 		}
 
@@ -34,7 +36,7 @@ namespace InformationNode
 		{
 			try
 			{
-				StartUdpListener();
+				StartUdpMulticastListener();
 				listener = new TcpListener(IPAddress.Parse(Address), Port);
 				listener.Start();
 				//Console.WriteLine("Ожидание подключений...");
@@ -61,27 +63,39 @@ namespace InformationNode
 			}
 		}
 
-		private void StartUdpListener()
+		private void StartUdpMulticastListener()
 		{
 			//почистить код
 			Task.Run(() =>
 			{
-				udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram,ProtocolType.Udp);
-				IPEndPoint ipep = new IPEndPoint(IPAddress.Any, 4567);
-				udpSocket.Bind(ipep);
-				IPAddress ip = IPAddress.Parse("224.5.6.7");
-				udpSocket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(ip, IPAddress.Any));
-				while (true)
+				try
 				{
-					byte[] b = new byte[100000];
-					udpSocket.Receive(b);
-					string str = Encoding.Unicode.GetString(b, 0, b.Length);
-					TcpClient client = new TcpClient(Address, 11000);
-					Message msg = Message.Create(str, new Client(client, this));
-					b = Encoding.Unicode.GetBytes(msg.GetResponse());
-					client.GetStream().Write(b, 0, b.Length);
-					client.Close();
+					udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+					IPEndPoint ipep = new IPEndPoint(IPAddress.Any, 4567);
+					udpSocket.Bind(ipep);
+					IPAddress ip = IPAddress.Parse("224.5.6.7");
+					udpSocket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership,
+						new MulticastOption(ip, IPAddress.Any));
+					while (true)
+					{
+						byte[] b = new byte[100000];
+						udpSocket.Receive(b);
+						string str = Encoding.Unicode.GetString(b, 0, b.Length);
+						Message medMsg = JsonConvert.DeserializeObject<Message>(str);
+						Message msg = Message.Create(str, new Client(null, this));
+						b = Encoding.Unicode.GetBytes(msg.GetResponse());
+						SendUdpUnicast(int.Parse(medMsg.Body), medMsg.Author);
+					}
 				}
+				catch (Exception e)
+				{
+					Console.WriteLine(e);
+				}
+				finally
+				{
+					udpSocket?.Close();
+				}
+				
 			});
 		}
 
@@ -93,6 +107,35 @@ namespace InformationNode
 				return JsonConvert.DeserializeObject<List<Person>>(str);
 			}
 			return new List<Person>();
+		}
+
+		public void SendUdpUnicast(int port, string ip)
+		{
+			IPEndPoint remoteep = new IPEndPoint(IPAddress.Parse(ip), port);
+			UdpClient client = new UdpClient(remoteep);
+			Message msg = new ResponseMsg(Port+"", JsonConvert.SerializeObject(this));
+
+			var b = Encoding.Unicode.GetBytes(JsonConvert.SerializeObject(msg));
+			client.Send(b, b.Length, remoteep);
+			client.Close();
+		}
+
+		public void SendConnect(Node node)
+		{
+			try
+			{
+				TcpClient client = new TcpClient(node.Address, node.Port);
+				var stream = client.GetStream();
+				byte[] data = Encoding.Unicode.GetBytes(JsonConvert.SerializeObject(this));
+				// отправка сообщения
+				stream.Write(data, 0, data.Length);
+				stream?.Close();
+				client?.Close();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
 		}
 	}
 }

@@ -15,9 +15,6 @@ namespace Mediator.Messages
 		{
 		}
 
-		public GetNodesMsg(string type)
-		{
-			Type = type;
-		}
+		public GetNodesMsg() { }
 	}
 }

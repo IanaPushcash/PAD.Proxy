@@ -26,13 +26,15 @@ namespace InformationNode
 			var port = Convert.ToInt32(Console.ReadLine());
 			Console.WriteLine("Count of linked nodes:");
 			var countPorts = Convert.ToInt32(Console.ReadLine());
-			var node = new Node(filePath, port);
+			var node = new Node(filePath, port, "127.0.0.1");
 			for (int i = 0; i < countPorts; i++)
 			{
 				Console.WriteLine("Enter port for {0} node", i+1);
-				node.LinkedNodes.Add(new LinkedNode(Convert.ToInt32(Console.ReadLine())));
+				var nNode = new LinkedNode(Convert.ToInt32(Console.ReadLine()), "127.0.0.1");
+				node.SendConnect(nNode);
+				node.MyNodes.Add(nNode);
+
 			}
-			
 			node.Start();
 			while (true)
 			{

@@ -13,9 +13,8 @@ namespace Mediator.Messages
 			var msgObj = JsonConvert.DeserializeObject<Message>(msg);
 			switch (msgObj.Type)
 			{
-				case "Connect": return new ConnectMsg(msgObj, client);
-				case "GetInfo": return new GetInfoMsg(msgObj);
-				case "GetNodes":return new GetNodesMsg(msgObj);
+				case "GetInfo": return new GetInfoMsg(msgObj, client);
+				case "GetNodes":return new GetNodesMsg(msgObj, client);
 				default:
 					return new ErrorMsg();
 			}

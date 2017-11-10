@@ -1,4 +1,6 @@
-﻿namespace Mediator.Messages
+﻿using Newtonsoft.Json;
+
+namespace Mediator.Messages
 {
 	class ResponseMsg:Message
 	{

@@ -9,7 +9,7 @@ namespace Mediator.Messages
 			throw new NotImplementedException();
 		}
 
-		public ErrorMsg(Message msg) : base(msg)
+		public ErrorMsg(Message msg) : base()
 		{
 		}
 

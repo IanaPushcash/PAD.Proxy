@@ -10,6 +10,7 @@ namespace Mediator
 	{
 		static void Main(string[] args)
 		{
+			new Mediator().Start();
 		}
 	}
 }

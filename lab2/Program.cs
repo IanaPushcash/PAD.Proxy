@@ -44,6 +44,10 @@ namespace lab2
 					client?.Close();
 				}
 			});
+			while (true)
+			{
+				Console.ReadLine();
+			}
 		}
 	}
 }
