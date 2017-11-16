@@ -18,11 +18,9 @@ namespace InformationNode
 		private TcpListener listener; 
 		public string FilePath { get; set; }
 		public int Port { get; set; }
-		//public int PortUdp { get; set; }
-		//public int CountLinks { get; set; }
 		public string Address { get; set; } = "127.0.0.1";
-		public List<LinkedNode> LinkedNodes { get; set; } //ко мне подключаются
-		public List<LinkedNode> MyNodes { get; set; } //я подключаюсь к
+		public List<Node> LinkedNodes { get; set; } //ко мне подключаются
+		public List<Node> MyNodes { get; set; } //я подключаюсь к
 		private Socket udpSocket { get; set; }
 		public Node() { }
 		public Node(string filePath, int port, string ip)
@@ -30,9 +28,13 @@ namespace InformationNode
 			FilePath = filePath;
 			Port = port;
 			Address = ip;
-			//PortUdp = Port + 4000;
-			LinkedNodes = new List<LinkedNode>();
-			MyNodes = new List<LinkedNode>();
+			LinkedNodes = new List<Node>();
+			MyNodes = new List<Node>();
+		}
+		public Node(int port, string ip):base()
+		{
+			Port = port;
+			Address = ip;
 		}
 
 		public void Start()
@@ -42,7 +44,6 @@ namespace InformationNode
 				StartUdpMulticastListener();
 				listener = new TcpListener(IPAddress.Parse(Address), Port);
 				listener.Start();
-				//Console.WriteLine("Ожидание подключений...");
 
 				while (true)
 				{
@@ -52,7 +53,6 @@ namespace InformationNode
 					// создаем новый поток для обслуживания нового клиента
 					Thread clientThread = new Thread(new ThreadStart(clientObj.Process));
 					clientThread.Start();
-					//Thread.Sleep(100);
 				}
 			}
 			catch (Exception ex)
@@ -82,25 +82,6 @@ namespace InformationNode
 					nmo.MulticastOptionProperties();
 					// Receive broadcast messages.
 					nmo.ReceiveBroadcastMessages(this);
-
-
-
-					//udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-					//IPAddress ip = IPAddress.Parse("224.5.6.7");
-					//IPEndPoint ipep = new IPEndPoint(IPAddress.Any, PortUdp);
-					//udpSocket.Bind(ipep);
-					//udpSocket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership,
-					//	new MulticastOption(ip, IPAddress.Any));
-					//while (true)
-					//{
-					//	byte[] b = new byte[100000];
-					//	udpSocket.Receive(b);
-					//	string str = Encoding.Unicode.GetString(b, 0, b.Length);
-					//	Message medMsg = JsonConvert.DeserializeObject<Message>(str);
-					//	Message msg = Message.Create(str, new Client(null, this));
-					//	b = Encoding.Unicode.GetBytes(msg.GetResponse());
-					//	SendUdpUnicast(int.Parse(medMsg.Body), medMsg.Author);
-					//}
 				}
 				catch (Exception e)
 				{

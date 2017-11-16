@@ -30,7 +30,7 @@ namespace InformationNode
 			for (int i = 0; i < countPorts; i++)
 			{
 				Console.WriteLine("Enter port for {0} node", i+1);
-				var nNode = new LinkedNode(Convert.ToInt32(Console.ReadLine()), "127.0.0.1");
+				var nNode = new Node(Convert.ToInt32(Console.ReadLine()), "127.0.0.1");
 				node.SendConnect(nNode);
 				node.MyNodes.Add(nNode);
 

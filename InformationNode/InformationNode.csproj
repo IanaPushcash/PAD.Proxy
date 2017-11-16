@@ -48,7 +48,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
-    <Compile Include="LinkedNode.cs" />
     <Compile Include="Messages\ConnectMsg.cs" />
     <Compile Include="Messages\ErrorMsg.cs" />
     <Compile Include="Messages\GetInfoMsg.cs" />

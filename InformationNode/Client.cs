@@ -32,11 +32,7 @@ namespace InformationNode
 				byte[] data = new byte[1000000]; // буфер для получаемых данных
 				// получаем сообщение
 				StringBuilder builder = new StringBuilder();
-				int bytes = 0;
-				//while (true)
-				//{
-				//	if (stream.DataAvailable)
-				//	{
+				int bytes;
 				do
 				{
 					bytes = stream.Read(data, 0, data.Length);
@@ -49,30 +45,6 @@ namespace InformationNode
 					data = Encoding.Unicode.GetBytes(response);
 					stream.Write(data, 0, data.Length);
 				}
-				//		break;
-				//	}
-				//}
-				//ClientName = msg.Name;
-				//if (!msg.IsSender && !Broker.Subscribers.Contains(this))
-				//{
-				//	TargetAuthor = msg.Name;
-				//	TargetType = msg.TypeMsg;
-				//	Broker.Subscribers.Add(this);
-				//}
-				//else if (!Broker.Publishers.Contains(this))
-				//{
-				//	Broker.Publishers.Add(this);
-				//}
-				//Broker.GetInstance().ProcessingMsg(msg, stream);
-
-				//	while (true)
-				//	{
-				//		stream.
-				//	}
-				//	Broker.GetInstance().AddMsg(msg);
-				//else Broker.GetInstance().GetAnswerMsg(msg, stream);
-				// отправляем обратно сообщение в верхнем регистре
-				//message = message.Substring(message.IndexOf(':') + 1).Trim().ToUpper();
 
 			}
 			catch (Exception ex)
@@ -81,10 +53,6 @@ namespace InformationNode
 			}
 			finally
 			{
-				//if (stream != null)
-				//	stream.Close();
-				//if (client != null)
-				//	client.Close();
 				stream?.Close();
 				client?.Close();
 			}

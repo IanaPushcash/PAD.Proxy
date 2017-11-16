@@ -33,31 +33,24 @@ namespace Mediator.Messages
 						}));
 						// отправка сообщения
 						stream.Write(data, 0, data.Length);
-						//Thread thread = new Thread(() =>
-						//{
-							while (true)
+						while (true)
+						{
+							if (stream.DataAvailable)
 							{
-								if (stream.DataAvailable)
+								// получаем ответ
+								var data2 = new byte[10000]; // буфер для получаемых данных
+								StringBuilder builder = new StringBuilder();
+								int bytes = 0;
+								do
 								{
-									// получаем ответ
-									var data2 = new byte[10000]; // буфер для получаемых данных
-									StringBuilder builder = new StringBuilder();
-									int bytes = 0;
-									do
-									{
-										bytes = stream.Read(data2, 0, data2.Length);
-										builder.Append(Encoding.Unicode.GetString(data2, 0, bytes));
-									} while (stream.DataAvailable);
-									nodeData.AddRange(JsonConvert.DeserializeObject<List<Person>>(JsonConvert.DeserializeObject<Message>(builder.ToString()).Body));
-									//stream?.Close();
-									//client?.Close();
-									break;
-								}
+									bytes = stream.Read(data2, 0, data2.Length);
+									builder.Append(Encoding.Unicode.GetString(data2, 0, bytes));
+								} while (stream.DataAvailable);
+								nodeData.AddRange(
+									JsonConvert.DeserializeObject<List<Person>>(JsonConvert.DeserializeObject<Message>(builder.ToString()).Body));
+								break;
 							}
-						//});
-						//thread.Start();
-						//Thread.Sleep(30000);
-						//thread.Abort();
+						}
 						stream?.Close();
 						client?.Close();
 						cde.Signal();

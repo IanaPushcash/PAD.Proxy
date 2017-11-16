@@ -71,7 +71,6 @@ namespace InformationNode
 
 		public void ReceiveBroadcastMessages(Node currentNode)
 		{
-			IPEndPoint groupEP = new IPEndPoint(mcastAddress, mcastPort);
 			EndPoint remoteEP = (EndPoint)new IPEndPoint(IPAddress.Any, 0);
 			try
 			{
@@ -97,7 +96,6 @@ namespace InformationNode
 
 		public void SendUdpUnicast(int port, string ip, int currentPort, byte[] msg)
 		{
-			//IPEndPoint remoteep = new IPEndPoint(IPAddress.Parse(ip), 1001);
 			IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(ip), 0);
 			IPEndPoint targetEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
 			UdpClient client = new UdpClient(localEndPoint);

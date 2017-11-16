@@ -40,7 +40,6 @@ namespace Mediator
 					{
 						if (i != indexMax && !ln[indexMax].Contains(ln[i][j]))
 						{
-							//ln[indexMax].Add(ln[i][j]);
 							ln[indexMax].AddRange(ln[i]);
 							mainNodes.Add(Nodes[i]);
 						}
@@ -59,8 +58,7 @@ namespace Mediator
 			{
 				listener = new TcpListener(IPAddress.Parse(Address), Port);
 				listener.Start();
-				//Console.WriteLine("Ожидание подключений...");
-
+				
 				while (true)
 				{
 					TcpClient client = listener.AcceptTcpClient();
@@ -69,7 +67,6 @@ namespace Mediator
 					// создаем новый поток для обслуживания нового клиента
 					Thread clientThread = new Thread(new ThreadStart(clientObj.Process));
 					clientThread.Start();
-					//Thread.Sleep(100);
 				}
 			}
 			catch (Exception ex)

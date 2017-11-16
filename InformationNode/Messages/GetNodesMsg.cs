@@ -21,7 +21,7 @@ namespace InformationNode.Messages
 			return new ResponseMsg(CurrentClient.InitNode.Port+"", JsonConvert.SerializeObject(CurrentClient.InitNode).Replace("\"", "~")).GetResponse();
 		}
 
-		private List<LinkedNode> GetValue(List<LinkedNode> nodes)
+		private List<Node> GetValue(List<Node> nodes)
 		{
 			for (int i = 0; i < nodes.Count; i++)
 			{
@@ -35,8 +35,6 @@ namespace InformationNode.Messages
 						nodes.Remove(ln);
 						i--;
 					}
-					//client.GetStream().Write(Encoding.Unicode.GetBytes(""), 0, 4);
-					//client.GetStream().Close();
 					client.Close();
 				}
 				catch (Exception ex)

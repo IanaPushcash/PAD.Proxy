@@ -36,21 +36,6 @@ namespace Mediator
 				// Broadcast the message to the listener.
 				mo.BroadcastMessage(JsonConvert.SerializeObject(msg));
 
-
-
-				//Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-				//IPAddress ip = IPAddress.Parse("224.5.6.7");
-				//s.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(ip));
-				//s.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastTimeToLive, 2);
-				//IPEndPoint ipep = new IPEndPoint(ip, 4567);
-				//s.Connect(ipep);
-
-
-				//var data = Encoding.Unicode.GetBytes(JsonConvert.SerializeObject(msg));
-				//s.Send(data, data.Length, SocketFlags.None);
-				//s.Close();
-
-
 				UdpClient udpclient = new UdpClient();
 				IPEndPoint localEp = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 10000);
 				udpclient.Client.Bind(localEp);

@@ -29,7 +29,6 @@ namespace Mediator
 
 				// Get the local IP address used by the listener and the sender to
 				// exchange multicast messages. 
-				Console.Write("\nEnter local IPAddress for sending multicast packets: ");
 				IPAddress localIPAddr = IPAddress.Parse("127.0.0.1");
 
 				// Create an IPEndPoint object. 
@@ -51,7 +50,7 @@ namespace Mediator
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine("\n" + e.ToString());
+				Console.WriteLine("\n" + e);
 			}
 		}
 
@@ -68,7 +67,7 @@ namespace Mediator
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine("\n" + e.ToString());
+				Console.WriteLine("\n" + e);
 			}
 
 			mcastSocket?.Close();

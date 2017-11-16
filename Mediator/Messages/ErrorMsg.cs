@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace Mediator.Messages
 {
@@ -6,7 +7,7 @@ namespace Mediator.Messages
 	{
 		public override string GetResponse()
 		{
-			throw new NotImplementedException();
+			return JsonConvert.SerializeObject(this);
 		}
 
 		public ErrorMsg(Message msg) : base()

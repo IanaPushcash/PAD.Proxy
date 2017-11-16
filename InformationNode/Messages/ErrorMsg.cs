@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace InformationNode.Messages
 {
@@ -10,7 +11,7 @@ namespace InformationNode.Messages
 	{
 		public override string GetResponse()
 		{
-			throw new NotImplementedException();
+			return JsonConvert.SerializeObject(this);
 		}
 
 		public ErrorMsg(Message msg) 

@@ -19,7 +19,7 @@ namespace InformationNode.Messages
 			Console.WriteLine($"GetInfoMsg is recieved");
 			if (Author == "Mediator")
 			{
-				var allNodes = new List<LinkedNode>(CurrentClient.InitNode.LinkedNodes);
+				var allNodes = new List<Node>(CurrentClient.InitNode.LinkedNodes);
 				Console.WriteLine($"My own data is added");
 				allNodes.AddRange(CurrentClient.InitNode.MyNodes);
 				CountdownEvent cde = new CountdownEvent(allNodes.Count);
@@ -38,8 +38,7 @@ namespace InformationNode.Messages
 							byte[] data = Encoding.Unicode.GetBytes(JsonConvert.SerializeObject(newMsg));
 							// отправка сообщения
 							stream.Write(data, 0, data.Length);
-							//Thread thread = new Thread(() =>
-							//{
+							
 							while (true)
 							{
 								if (stream.DataAvailable)
@@ -56,15 +55,9 @@ namespace InformationNode.Messages
 									Console.WriteLine($"Node's {ln.Port} data is added");
 									nodeData.AddRange(
 										JsonConvert.DeserializeObject<List<Person>>(JsonConvert.DeserializeObject<Message>(builder.ToString()).Body));
-									//stream?.Close();
-									//client?.Close();
 									break;
 								}
 							}
-							//});
-							//thread.Start();
-							//Thread.Sleep(5000);
-							//thread.Abort();
 							stream?.Close();
 							client?.Close();
 							cde.Signal();
