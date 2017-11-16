@@ -73,7 +73,7 @@ namespace InformationNode.Messages
 			}
 			Console.WriteLine($"{JsonConvert.SerializeObject(nodeData)}");
 			return new ResponseMsg(JsonConvert.SerializeObject(CurrentClient.InitNode),
-				JsonConvert.SerializeObject(nodeData)).GetResponse();
+				JsonConvert.SerializeObject(nodeData), ReturnJson).GetResponse();
 		}
 
 		public GetInfoMsg(Message msg, Client client) : base(msg, client)

@@ -7,6 +7,7 @@ namespace InformationNode.Messages
 		public string Author { get; set; }
 		public string Type { get; set; }
 		public string Body { get; set; }
+		public bool ReturnJson { get; set; }
 		protected Client CurrentClient { get; set; }
 		public static Message Create(string msg, Client client)
 		{
@@ -33,6 +34,7 @@ namespace InformationNode.Messages
 			Type = msg.Type;
 			Body = msg.Body;
 			CurrentClient = client;
+			ReturnJson = msg.ReturnJson;
 		}
 		public Message() { }
 		public Message(Message msg)
@@ -40,13 +42,9 @@ namespace InformationNode.Messages
 			Author = msg.Author;
 			Type = msg.Type;
 			Body = msg.Body;
+			ReturnJson = msg.ReturnJson;
 		}
 
-		public Message(string author, string type, string body)
-		{
-			Author = author;
-			Type = type;
-			Body = body;
-		}
+		
 	}
 }

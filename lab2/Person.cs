@@ -1,4 +1,10 @@
-﻿namespace InformationNode
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace lab2
 {
 	public class Person
 	{
@@ -13,6 +19,11 @@
 			Name = name;
 			Age = age;
 			Country = country;
+		}
+
+		public override string ToString()
+		{
+			return $"\nName = {Name}\nAge = {Age}\nCountry = {Country}";
 		}
 	}
 }

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Newtonsoft.Json;
 
 namespace Mediator.Messages
@@ -65,8 +68,45 @@ namespace Mediator.Messages
 
 			}
 			cde.Wait();
+
 			return new ResponseMsg("Mediator",
-				JsonConvert.SerializeObject(nodeData)).GetResponse();
+				GetFormatData(ApplyOpperations(nodeData)), ReturnJson).GetResponse();
+		}
+
+		private string GetFormatData(List<Person> data)
+		{
+			if (ReturnJson)
+				return JsonConvert.SerializeObject(data);
+			// передаем в конструктор тип класса
+			XmlSerializer formatter = new XmlSerializer(typeof(List<Person>));
+			using (StringWriter textWriter = new StringWriter())
+			{
+				formatter.Serialize(textWriter, data);
+				return textWriter.ToString();
+			}
+		}
+
+		private List<Person> ApplyOpperations(List<Person> data)
+		{
+			if (FilterBy != null)
+			{
+				foreach (var property in FilterBy.FilterPerson.GetType().GetProperties())
+				{
+					if (property.GetValue(FilterBy.FilterPerson) != null)
+					data = data.Where(d => property.GetValue(d).Equals(property.GetValue(FilterBy.FilterPerson))).ToList();
+				}
+			}
+			if (SortBy != null)
+			{
+				foreach (var field in SortBy.Fields)
+				{
+					if (SortBy.IsAsc)
+						data = data.OrderBy(d => d.GetType().GetProperty(field)?.GetValue(d)).ToList();
+					else
+						data = data.OrderByDescending(d => d.GetType().GetProperty(field)?.GetValue(d)).ToList();
+				}
+			}
+			return data;
 		}
 
 

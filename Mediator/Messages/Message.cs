@@ -7,6 +7,9 @@ namespace Mediator.Messages
 		public string Author { get; set; }
 		public string Type { get; set; }
 		public string Body { get; set; }
+		public Filter FilterBy { get; set; }
+		public Sort SortBy { get; set; }
+		public bool ReturnJson { get; set; }
 		protected Client CurrentClient { get; set; }
 		public static Message Create(string msg, Client client)
 		{
@@ -32,6 +35,9 @@ namespace Mediator.Messages
 			Type = msg.Type;
 			Body = msg.Body;
 			CurrentClient = client;
+			FilterBy = msg.FilterBy;
+			SortBy = msg.SortBy;
+			ReturnJson = msg.ReturnJson;
 		}
 		public Message() { }
 
@@ -40,6 +46,9 @@ namespace Mediator.Messages
 			Author = msg.Author;
 			Type = msg.Type;
 			Body = msg.Body;
+			FilterBy = msg.FilterBy;
+			SortBy = msg.SortBy;
+			ReturnJson = msg.ReturnJson;
 		}
 	}
 }

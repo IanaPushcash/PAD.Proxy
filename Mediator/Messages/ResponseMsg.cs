@@ -9,10 +9,11 @@ namespace Mediator.Messages
 			return JsonConvert.SerializeObject(this);
 		}
 
-		public ResponseMsg(string author, string body)
+		public ResponseMsg(string author, string body, bool returnJson)
 		{
 			Author = author;
 			Body = body;
+			ReturnJson = returnJson;
 		}
 	}
 }
