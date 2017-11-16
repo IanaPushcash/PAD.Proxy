@@ -17,8 +17,9 @@ namespace InformationNode
 		{
 			Port = port;
 			Address = ip;
+			//PortUdp = Port + 4000;
 		}
 
-		
+		public LinkedNode() { }
 	}
 }

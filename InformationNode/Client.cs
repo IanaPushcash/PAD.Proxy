@@ -33,16 +33,25 @@ namespace InformationNode
 				// получаем сообщение
 				StringBuilder builder = new StringBuilder();
 				int bytes = 0;
+				//while (true)
+				//{
+				//	if (stream.DataAvailable)
+				//	{
 				do
 				{
 					bytes = stream.Read(data, 0, data.Length);
 					builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
 				} while (stream.DataAvailable);
-
-				Message msg = Message.Create(builder.ToString(), this);
-				string response = msg.GetResponse();
-				data = Encoding.Unicode.GetBytes(response);
-				stream.Write(data, 0, data.Length);
+				if (builder.Length > 0)
+				{
+					Message msg = Message.Create(builder.ToString(), this);
+					string response = msg.GetResponse();
+					data = Encoding.Unicode.GetBytes(response);
+					stream.Write(data, 0, data.Length);
+				}
+				//		break;
+				//	}
+				//}
 				//ClientName = msg.Name;
 				//if (!msg.IsSender && !Broker.Subscribers.Contains(this))
 				//{
@@ -68,7 +77,7 @@ namespace InformationNode
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message);
+				Console.WriteLine(ex);
 			}
 			finally
 			{

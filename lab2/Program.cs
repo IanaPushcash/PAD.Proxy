@@ -13,12 +13,12 @@ namespace lab2
 	class Program
 	{
 		static void Main(string[] args)
-		{
+		{ 
 			var x = new Message()
 			{
 				Author = "I",
 				Body = "All",
-				Type = "GetInfoMsg"
+				Type = "GetInfo"
 			};
 			Console.WriteLine(JsonConvert.SerializeObject(x));
 			TcpClient client = new TcpClient("127.0.0.1", 11000);
@@ -28,22 +28,27 @@ namespace lab2
 			stream.Write(data, 0, data.Length);
 			Thread thread = new Thread(() =>
 			{
-				if (stream.DataAvailable)
+				while (true)
 				{
-					// получаем ответ
-					data = new byte[1000000]; // буфер для получаемых данных
-					StringBuilder builder = new StringBuilder();
-					int bytes = 0;
-					do
+					if (stream.DataAvailable)
 					{
-						bytes = stream.Read(data, 0, data.Length);
-						builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
-					} while (stream.DataAvailable);
-					Console.WriteLine(builder.ToString());
-					stream?.Close();
-					client?.Close();
+						// получаем ответ
+						data = new byte[1000000]; // буфер для получаемых данных
+						StringBuilder builder = new StringBuilder();
+						int bytes = 0;
+						do
+						{
+							bytes = stream.Read(data, 0, data.Length);
+							builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
+						} while (stream.DataAvailable);
+						Console.WriteLine(builder.ToString());
+						stream?.Close();
+						client?.Close();
+						break;
+					}
 				}
 			});
+			thread.Start();
 			while (true)
 			{
 				Console.ReadLine();

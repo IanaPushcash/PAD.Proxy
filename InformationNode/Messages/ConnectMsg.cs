@@ -13,8 +13,9 @@ namespace InformationNode.Messages
 		
 		public override string GetResponse()
 		{
-			LinkedNode lNode = JsonConvert.DeserializeObject<LinkedNode>(Author);
+			LinkedNode lNode = JsonConvert.DeserializeObject<LinkedNode>(Body);
 			CurrentClient.InitNode.LinkedNodes.Add(lNode);
+			Console.WriteLine($"node {lNode.Port} is connected");
 			return new ResponseMsg(JsonConvert.SerializeObject(CurrentClient.InitNode), "success").GetResponse();
 		}
 

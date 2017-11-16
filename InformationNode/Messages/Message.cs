@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace InformationNode.Messages
 {
-	abstract class Message
+	class Message
 	{
 		public string Author { get; set; }
 		public string Type { get; set; }
@@ -23,7 +23,10 @@ namespace InformationNode.Messages
 			
 		}
 
-		public abstract string GetResponse();
+		public virtual string GetResponse()
+		{
+			return "";
+		}
 
 		public Message(Message msg, Client client)
 		{
@@ -33,5 +36,18 @@ namespace InformationNode.Messages
 			CurrentClient = client;
 		}
 		public Message() { }
+		public Message(Message msg)
+		{
+			Author = msg.Author;
+			Type = msg.Type;
+			Body = msg.Body;
+		}
+
+		public Message(string author, string type, string body)
+		{
+			Author = author;
+			Type = type;
+			Body = body;
+		}
 	}
 }

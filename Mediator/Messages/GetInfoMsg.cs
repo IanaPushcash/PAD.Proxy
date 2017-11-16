@@ -28,35 +28,36 @@ namespace Mediator.Messages
 						var stream = client.GetStream();
 						byte[] data = Encoding.Unicode.GetBytes(JsonConvert.SerializeObject(new GetInfoMsg()
 						{
-							Type = "GetInfo"
+							Type = "GetInfo",
+							Author = "Mediator"
 						}));
 						// отправка сообщения
 						stream.Write(data, 0, data.Length);
-						Thread thread = new Thread(() =>
-						{
+						//Thread thread = new Thread(() =>
+						//{
 							while (true)
 							{
 								if (stream.DataAvailable)
 								{
 									// получаем ответ
-									data = new byte[1000000]; // буфер для получаемых данных
+									var data2 = new byte[10000]; // буфер для получаемых данных
 									StringBuilder builder = new StringBuilder();
 									int bytes = 0;
 									do
 									{
-										bytes = stream.Read(data, 0, data.Length);
-										builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
+										bytes = stream.Read(data2, 0, data2.Length);
+										builder.Append(Encoding.Unicode.GetString(data2, 0, bytes));
 									} while (stream.DataAvailable);
-									nodeData.AddRange(JsonConvert.DeserializeObject<List<Person>>(builder.ToString()));
-									stream?.Close();
-									client?.Close();
+									nodeData.AddRange(JsonConvert.DeserializeObject<List<Person>>(JsonConvert.DeserializeObject<Message>(builder.ToString()).Body));
+									//stream?.Close();
+									//client?.Close();
 									break;
 								}
 							}
-						});
-						thread.Start();
-						Thread.Sleep(3000);
-						thread.Abort();
+						//});
+						//thread.Start();
+						//Thread.Sleep(30000);
+						//thread.Abort();
 						stream?.Close();
 						client?.Close();
 						cde.Signal();
@@ -65,7 +66,7 @@ namespace Mediator.Messages
 				}
 				catch (Exception ex)
 				{
-					Console.WriteLine(ex.Message);
+					Console.WriteLine(ex);
 					cde.Signal();
 				}
 

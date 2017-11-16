@@ -2,7 +2,7 @@
 
 namespace Mediator.Messages
 {
-	abstract class Message
+	class Message
 	{
 		public string Author { get; set; }
 		public string Type { get; set; }
@@ -21,7 +21,10 @@ namespace Mediator.Messages
 			
 		}
 
-		public abstract string GetResponse();
+		public virtual string GetResponse()
+		{
+			return "";
+		}
 
 		public Message(Message msg, Client client)
 		{
@@ -31,5 +34,12 @@ namespace Mediator.Messages
 			CurrentClient = client;
 		}
 		public Message() { }
+
+		public Message(Message msg)
+		{
+			Author = msg.Author;
+			Type = msg.Type;
+			Body = msg.Body;
+		}
 	}
 }

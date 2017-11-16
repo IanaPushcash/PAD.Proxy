@@ -17,35 +17,33 @@ namespace InformationNode.Messages
 		{
 			CurrentClient.InitNode.LinkedNodes = GetValue(CurrentClient.InitNode.LinkedNodes);
 			CurrentClient.InitNode.MyNodes = GetValue(CurrentClient.InitNode.MyNodes);
-			return new ResponseMsg(JsonConvert.SerializeObject(CurrentClient.InitNode), "").GetResponse();
+			Console.WriteLine($"Return nodes");
+			return new ResponseMsg(CurrentClient.InitNode.Port+"", JsonConvert.SerializeObject(CurrentClient.InitNode).Replace("\"", "~")).GetResponse();
 		}
 
 		private List<LinkedNode> GetValue(List<LinkedNode> nodes)
 		{
-			CountdownEvent cde = new CountdownEvent(nodes.Count);
 			for (int i = 0; i < nodes.Count; i++)
 			{
 				var ln = nodes[i];
 				try
 				{
-					Task.Run(() =>
+
+					TcpClient client = new TcpClient(ln.Address, ln.Port);
+					if (!client.Connected)
 					{
-						TcpClient client = new TcpClient(ln.Address, ln.Port);
-						if (!client.Connected)
-						{
-							nodes.Remove(ln);
-							i--;
-						}
-						cde.Signal();
-					});
+						nodes.Remove(ln);
+						i--;
+					}
+					//client.GetStream().Write(Encoding.Unicode.GetBytes(""), 0, 4);
+					//client.GetStream().Close();
+					client.Close();
 				}
 				catch (Exception ex)
 				{
-					Console.WriteLine(ex.Message);
-					cde.Signal();
+					Console.WriteLine(ex);
 				}
 			}
-			cde.Wait();
 			return nodes;
 		}
 

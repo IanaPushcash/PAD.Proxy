@@ -54,6 +54,7 @@
     <Compile Include="Messages\GetNodesMsg.cs" />
     <Compile Include="Messages\Message.cs" />
     <Compile Include="Messages\ResponseMsg.cs" />
+    <Compile Include="MedMulticastOption.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Program.cs" />

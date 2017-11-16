@@ -12,6 +12,7 @@ namespace Mediator
 	{
 		public string FilePath { get; set; }
 		public int Port { get; set; }
+		public int PortUdp { get; set; }
 		//public int CountLinks { get; set; }
 		public string Address { get; set; } = "127.0.0.1";
 		public List<Node> LinkedNodes { get; set; } //ко мне подключаются
@@ -30,7 +31,7 @@ namespace Mediator
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message);
+				Console.WriteLine(ex);
 			}
 		}
 
@@ -41,5 +42,7 @@ namespace Mediator
 			var n = (Node) obj;
 			return Port == n.Port && Address == n.Address;
 		}
+
+		public Node() { }
 	}
 }
