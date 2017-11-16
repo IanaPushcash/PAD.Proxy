@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 using InformationNode.Messages;
 using Newtonsoft.Json;
 
@@ -23,7 +24,7 @@ using Newtonsoft.Json;
 namespace InformationNode
 {
 
-	class NodeMulticastOption
+	class UdpHandler
 	{
 
 		public IPAddress mcastAddress;
@@ -32,7 +33,7 @@ namespace InformationNode
 		public MulticastOption mcastOption;
 
 
-		public void StartMulticast()
+		private void StartMulticast()
 		{
 
 			try
@@ -69,7 +70,7 @@ namespace InformationNode
 			}
 		}
 
-		public void ReceiveBroadcastMessages(Node currentNode)
+		private void ReceiveBroadcastMessages(Node currentNode)
 		{
 			EndPoint remoteEP = (EndPoint)new IPEndPoint(IPAddress.Any, 0);
 			try
@@ -94,7 +95,7 @@ namespace InformationNode
 			mcastSocket?.Close();
 		}
 
-		public void SendUdpUnicast(int port, string ip, int currentPort, byte[] msg)
+		private void SendUdpUnicast(int port, string ip, int currentPort, byte[] msg)
 		{
 			IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse(ip), 0);
 			IPEndPoint targetEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
@@ -104,10 +105,34 @@ namespace InformationNode
 			Console.WriteLine($"Отправлен unicast");
 		}
 
-		public void MulticastOptionProperties()
+		private void MulticastOptionProperties()
 		{
 			Console.WriteLine("Current multicast group is: " + mcastOption.Group);
 			Console.WriteLine("Current multicast local address is: " + mcastOption.LocalAddress);
+		}
+
+		public void StartUdpMulticastListenerAsync(Node node)
+		{
+			Task.Run(() =>
+			{
+				try
+				{
+					var nmo = new UdpHandler();
+					nmo.mcastAddress = IPAddress.Parse("224.168.100.2");
+					nmo.mcastPort = 12000;
+
+					// Start a multicast group.
+					nmo.StartMulticast();
+					nmo.MulticastOptionProperties();
+					// Receive broadcast messages.
+					nmo.ReceiveBroadcastMessages(node);
+				}
+				catch (Exception e)
+				{
+					Console.WriteLine(e);
+				}
+
+			});
 		}
 	}
 }

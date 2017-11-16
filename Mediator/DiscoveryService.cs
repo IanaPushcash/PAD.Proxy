@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Mediator.Messages;
 using Newtonsoft.Json;
 
 namespace Mediator
 {
-	class MedUdpClient
+	class DiscoveryService
 	{
 		public List<Node> Nodes { get; set; }
 
@@ -26,7 +24,7 @@ namespace Mediator
 					Body = "10000",
 					Type = "GetNodes"
 				};
-				MedMulticastOption mo = new MedMulticastOption();
+				UdpHandler mo = new UdpHandler();
 				mo.mcastAddress = IPAddress.Parse("224.168.100.2");
 				mo.mcastPort = 12000;
 

@@ -55,7 +55,7 @@
     <Compile Include="Messages\Message.cs" />
     <Compile Include="Messages\ResponseMsg.cs" />
     <Compile Include="Node.cs" />
-    <Compile Include="NodeMulticastOptions.cs" />
+    <Compile Include="UdpHandler.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

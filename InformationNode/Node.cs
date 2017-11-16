@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -21,7 +19,6 @@ namespace InformationNode
 		public string Address { get; set; } = "127.0.0.1";
 		public List<Node> LinkedNodes { get; set; } //ко мне подключаются
 		public List<Node> MyNodes { get; set; } //я подключаюсь к
-		private Socket udpSocket { get; set; }
 		public Node() { }
 		public Node(string filePath, int port, string ip)
 		{
@@ -41,7 +38,8 @@ namespace InformationNode
 		{
 			try
 			{
-				StartUdpMulticastListener();
+				var udpHandler = new UdpHandler();
+				udpHandler.StartUdpMulticastListenerAsync(this);
 				listener = new TcpListener(IPAddress.Parse(Address), Port);
 				listener.Start();
 
@@ -62,38 +60,10 @@ namespace InformationNode
 			finally
 			{
 				listener?.Stop();
-				udpSocket?.Close();
 			}
 		}
 
-		private void StartUdpMulticastListener()
-		{
-			//почистить код
-			Task.Run(() =>
-			{
-				try
-				{
-					var nmo = new NodeMulticastOption();
-					nmo.mcastAddress = IPAddress.Parse("224.168.100.2");
-					nmo.mcastPort = 12000;
-
-					// Start a multicast group.
-					nmo.StartMulticast();
-					nmo.MulticastOptionProperties();
-					// Receive broadcast messages.
-					nmo.ReceiveBroadcastMessages(this);
-				}
-				catch (Exception e)
-				{
-					Console.WriteLine(e);
-				}
-				finally
-				{
-					udpSocket?.Close();
-				}
-				
-			});
-		}
+		
 
 		public List<Person> GetData()
 		{

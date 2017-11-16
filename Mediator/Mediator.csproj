@@ -54,12 +54,12 @@
     <Compile Include="Messages\GetNodesMsg.cs" />
     <Compile Include="Messages\Message.cs" />
     <Compile Include="Messages\ResponseMsg.cs" />
-    <Compile Include="MedMulticastOption.cs" />
+    <Compile Include="UdpHandler.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UdpClient.cs" />
+    <Compile Include="DiscoveryService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

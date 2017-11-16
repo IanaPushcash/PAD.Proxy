@@ -1,5 +1,4 @@
-﻿using System.Net.Sockets;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace InformationNode.Messages
 {

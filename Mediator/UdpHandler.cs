@@ -12,7 +12,7 @@ using System.Text;
 //  
 namespace Mediator
 {
-	class MedMulticastOption
+	class UdpHandler
 	{
 
 		public IPAddress mcastAddress;

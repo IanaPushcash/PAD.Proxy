@@ -14,7 +14,7 @@ namespace Mediator.Messages
 		public override string GetResponse()
 		{
 			var nodeData = new List<Person>();
-			var udpClient = new MedUdpClient();
+			var udpClient = new DiscoveryService();
 			udpClient.FindNodes();
 			Mediator.SearchMainNodes();
 			CountdownEvent cde = new CountdownEvent(Mediator.Nodes.Count);
